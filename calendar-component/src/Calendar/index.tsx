@@ -1,8 +1,9 @@
+import MonthCalendar from "./MonthCalendar";
 import "./index.scss";
 
 function Calendar() {
   return <div className="calendar">
-    111
+    <MonthCalendar />
   </div>
 }
 
