@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { weekNames, monthNames } from './const';
 import './App.css';
 
@@ -7,13 +7,29 @@ interface CalendarProps {
   onChange?: (date: Date) => void,
 }
 
-const Calendar: React.FC<CalendarProps> = (props) => {
+interface CalendarRef {
+  getDate: () => Date,
+  setDate: (date: Date) => void,
+}
+
+const InternalCalendar: React.ForwardRefRenderFunction<CalendarRef, CalendarProps> = (props, ref) => {
   const {
     value = new Date(),
     onChange,
   } = props;
 
   const [date, setDate] = useState(value);
+
+  useImperativeHandle(ref, () => {
+    return {
+      getDate() {
+        return date;
+      },
+      setDate(date: Date) {
+        setDate(date);
+      },
+    };
+  });
 
   const handlePrevMonth = () => {
     setDate(new Date(date.getFullYear(), date.getMonth() - 1, 1));
@@ -68,4 +84,25 @@ const Calendar: React.FC<CalendarProps> = (props) => {
   );
 }
 
-export default Calendar;
+const Calendar = forwardRef(InternalCalendar);
+
+function Test() {
+  const calendarRef = useRef<CalendarRef>(null);
+
+  useEffect(() => {
+    console.log(calendarRef.current?.getDate().toLocaleDateString());
+
+    setTimeout(() => {
+      calendarRef.current?.setDate(new Date(2025, 2, 1));
+    }, 3000);
+  }, []);
+
+  return <div>
+    <Calendar value={new Date(2024, 1, 29)} onChange={(date: Date) => {
+      alert(date.toLocaleDateString());
+    }} />
+    <Calendar ref={calendarRef} value={new Date(2024, 2)} />
+  </div>
+}
+
+export default Test;

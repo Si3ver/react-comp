@@ -9,10 +9,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App value={new Date(2024, 1, 29)} onChange={(date: Date) => {
-      alert(date.toLocaleDateString());
-    }} />
-    <App value={new Date(2024, 2)} />
+    <App />
   </React.StrictMode>
 );
 
