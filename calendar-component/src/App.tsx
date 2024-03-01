@@ -8,6 +8,9 @@ function App() {
         className={'aaa'}
         // style={{background: 'pink'}}
         value={dayjs('2024-3-2')}
+        onChange={(date) => {
+          alert(date.format('YYYY-MM-DD'));
+        }}
         // locale="en-US"
         // dateRender={(value) => {
         //   return <div>

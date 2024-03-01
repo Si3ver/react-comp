@@ -7,7 +7,7 @@ import allLocales from "./locale";
 import cs from 'classnames';
 
 interface MonthCalendarProps extends CalendarProps {
-
+  selectHandler?: (date: Dayjs) => void;
 }
 
 function getAllDays(date: Dayjs) {
@@ -38,6 +38,7 @@ function renderDays(
   dateRender: MonthCalendarProps['dateRender'],
   dateInnerContent: MonthCalendarProps['dateInnerContent'],
   value: Dayjs,
+  selectHandler: MonthCalendarProps['selectHandler'],
 ) {
   const rows = [];
   for (let i = 0; i < LINES; ++i) {
@@ -46,7 +47,9 @@ function renderDays(
       const item = days[i * weekList.length + j];
       row[j] = <div className={
         "calendar-month-body-cell " + (item.currentMonth ? 'calendar-month-body-cell-current' : '' )
-      }>
+      }
+        onClick={() => selectHandler?.(item.date)}
+      >
         {
           dateRender ? dateRender(item.date) : (
             <div className="calendar-month-body-cell-date">
@@ -65,7 +68,7 @@ function renderDays(
     }
     rows[i] = row;
   }
-  return rows.map(row => <div className="calendar-month-body-row">{row}</div>)
+  return rows.map((row, rowIndex) => <div key={`row-${rowIndex}`} className="calendar-month-body-row">{row}</div>)
 }
 
 function MonthCalendar(props: MonthCalendarProps) {
@@ -73,6 +76,7 @@ function MonthCalendar(props: MonthCalendarProps) {
     value,
     dateRender,
     dateInnerContent,
+    selectHandler,
   } = props;
 
   const localeContext = useContext(LocaleContext);
@@ -92,7 +96,7 @@ function MonthCalendar(props: MonthCalendarProps) {
     </div>
     <div className="calendar-month-body">
       {
-        renderDays(allDays, dateRender, dateInnerContent, value)
+        renderDays(allDays, dateRender, dateInnerContent, value, selectHandler)
       }
     </div>
   </div>
