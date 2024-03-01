@@ -18,7 +18,7 @@
 
 }
 
-.empty, .day {
+.week, .empty, .day {
   width: calc(100% / 7);
   text-align: center;
   line-height: 30px;

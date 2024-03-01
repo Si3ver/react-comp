@@ -1,7 +1,6 @@
 import { useState } from 'react';
+import { weekNames, monthNames } from './const';
 import './App.css';
-
-import { monthNames } from './const';
 
 function Calendar() {
   const [date, setDate] = useState(new Date());
@@ -47,13 +46,7 @@ function Calendar() {
         <button onClick={handleNextMonth}>&gt;</button>
       </div>
       <div className="days">
-        <div className="day">日</div>
-        <div className="day">一</div>
-        <div className="day">二</div>
-        <div className="day">三</div>
-        <div className="day">四</div>
-        <div className="day">五</div>
-        <div className="day">六</div>
+        {weekNames.map((weekName, i) => (<div key={`week-${i}`} className="week">{weekName}</div>))}
         {renderDays()}
       </div>
     </div>

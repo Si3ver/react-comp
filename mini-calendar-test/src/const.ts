@@ -1,3 +1,13 @@
+const weekNames = [
+    'Sun',
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+];
+
 const monthNames = [
     'Jan',
     'Feb',
@@ -13,4 +23,4 @@ const monthNames = [
     'Dec',
 ];
 
-export { monthNames };
+export { weekNames, monthNames };
