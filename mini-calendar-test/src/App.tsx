@@ -1,9 +1,19 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { weekNames, monthNames } from './const';
 import './App.css';
 
-function Calendar() {
-  const [date, setDate] = useState(new Date());
+interface CalendarProps {
+  value?: Date,
+  onChange?: (date: Date) => void,
+}
+
+const Calendar: React.FC<CalendarProps> = (props) => {
+  const {
+    value = new Date(),
+    onChange,
+  } = props;
+
+  const [date, setDate] = useState(value);
 
   const handlePrevMonth = () => {
     setDate(new Date(date.getFullYear(), date.getMonth() - 1, 1));
@@ -32,7 +42,12 @@ function Calendar() {
       days.push(<div key={`empty-${i}`} className="empty"></div>);
     }
     for (let i = 1; i <= daysCount; ++i) {
-      days.push(<div key={i} className="day">{i}</div>)
+      const clickHandler = onChange?.bind(null, new Date(date.getFullYear(), date.getMonth(), i));
+      if (i === date.getDate()) {
+        days.push(<div key={i} className="day selected" onClick={clickHandler}>{i}</div>)
+      } else {
+        days.push(<div key={i} className="day" onClick={clickHandler}>{i}</div>)
+      }
     }
 
     return days;
