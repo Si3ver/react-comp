@@ -7,6 +7,7 @@ import allLocales from "./locale";
 import cs from 'classnames';
 
 interface MonthCalendarProps extends CalendarProps {
+  curMonth: Dayjs;
   selectHandler?: (date: Dayjs) => void;
 }
 
@@ -74,6 +75,7 @@ function renderDays(
 function MonthCalendar(props: MonthCalendarProps) {
   const {
     value,
+    curMonth,
     dateRender,
     dateInnerContent,
     selectHandler,
@@ -82,7 +84,7 @@ function MonthCalendar(props: MonthCalendarProps) {
   const localeContext = useContext(LocaleContext);
   const CalendarLocale = allLocales[localeContext.locale];
 
-  const allDays = getAllDays(props.value);
+  const allDays = getAllDays(curMonth);
 
   return <div className="calendar-month">
     <div className="calendar-month-week-list">
