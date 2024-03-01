@@ -46,9 +46,11 @@ function renderDays(
     const row = [];
     for (let j = 0; j < weekList.length; ++j) {
       const item = days[i * weekList.length + j];
-      row[j] = <div className={
-        "calendar-month-body-cell " + (item.currentMonth ? 'calendar-month-body-cell-current' : '' )
-      }
+      row[j] = <div 
+        key={`col-${j}`}
+        className={
+          "calendar-month-body-cell " + (item.currentMonth ? 'calendar-month-body-cell-current' : '' )
+        }
         onClick={() => selectHandler?.(item.date)}
       >
         {
