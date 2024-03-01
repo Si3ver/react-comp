@@ -18,10 +18,14 @@
 
 }
 
-.week, .empty, .day {
+.week, .disabled, .day {
   width: calc(100% / 7);
   text-align: center;
   line-height: 30px;
+}
+
+.disabled {
+  color: #999;
 }
 
 .day:hover, .selected {

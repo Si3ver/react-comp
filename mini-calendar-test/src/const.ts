@@ -1,3 +1,6 @@
+// 显示多少行
+const TOTAL_LINE = 6;
+
 const weekNames = [
     'Sun',
     'Mon',
@@ -23,4 +26,4 @@ const monthNames = [
     'Dec',
 ];
 
-export { weekNames, monthNames };
+export { TOTAL_LINE, weekNames, monthNames };

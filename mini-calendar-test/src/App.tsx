@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { weekNames, monthNames } from './const';
+import { TOTAL_LINE, weekNames, monthNames } from './const';
 import './App.css';
 
 interface CalendarProps {
@@ -54,8 +54,10 @@ const InternalCalendar: React.ForwardRefRenderFunction<CalendarRef, CalendarProp
     const daysCount = daysOfMonth(date.getFullYear(), date.getMonth());
     const firstDay = firstDayOfMonth(date.getFullYear(), date.getMonth());
 
-    for (let i = 0; i < firstDay; ++i) {
-      days.push(<div key={`empty-${i}`} className="empty"></div>);
+    // last Month
+    for (let i = 0; i > -firstDay; --i) {
+      const dayToShow = new Date(date.getFullYear(), date.getMonth(), i).getDate();
+      days.unshift(<div key={`empty-${i}`} className="disabled">{dayToShow}</div>);
     }
     for (let i = 1; i <= daysCount; ++i) {
       const clickHandler = onChange?.bind(null, new Date(date.getFullYear(), date.getMonth(), i));
@@ -64,6 +66,11 @@ const InternalCalendar: React.ForwardRefRenderFunction<CalendarRef, CalendarProp
       } else {
         days.push(<div key={i} className="day" onClick={clickHandler}>{i}</div>)
       }
+    }
+    // next month
+    const count = TOTAL_LINE * weekNames.length - days.length;
+    for (let i = 1; i <= count; ++i) {
+      days.push(<div key={`empty-${i}`} className="disabled">{i}</div>);
     }
 
     return days;
