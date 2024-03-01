@@ -1,12 +1,25 @@
+import { useState } from 'react';
 import './App.css';
 
+import { monthNames } from './const';
+
 function Calendar() {
+  const [date, setDate] = useState(new Date());
+
+  const handlePrevMonth = () => {
+    setDate(new Date(date.getFullYear(), date.getMonth() - 1, 1));
+  };
+
+  const handleNextMonth = () => {
+    setDate(new Date(date.getFullYear(), date.getMonth() + 1, 1));
+  };
+
   return (
     <div className="calendar">
       <div className="header">
-        <button>&lt;</button>
-        <div>2024 年 03 月</div>
-        <button>&gt;</button>
+        <button onClick={handlePrevMonth}>&lt;</button>
+        <div>{date.getFullYear()} - {monthNames[date.getMonth()]}</div>
+        <button onClick={handleNextMonth}>&gt;</button>
       </div>
       <div className="days">
         <div className="day">日</div>
