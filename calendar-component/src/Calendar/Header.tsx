@@ -7,6 +7,7 @@ interface HeaderProps {
   curMonth: Dayjs;
   prevMonthHandler: () => void;
   nextMonthHandler: () => void;
+  todayHandler: () => void;
 }
 
 function Header(props: HeaderProps) {
@@ -14,6 +15,7 @@ function Header(props: HeaderProps) {
     curMonth,
     prevMonthHandler,
     nextMonthHandler,
+    todayHandler,
   } = props;
 
   const localeContext = useContext(LocaleContext);
@@ -25,7 +27,7 @@ function Header(props: HeaderProps) {
       <div className="calendar-header-icon" onClick={prevMonthHandler}>&lt;</div>
       <div className="calendar-header-value">{curMonth.format(CalendarLocale.formatMonth)}</div>
       <div className="calendar-header-icon" onClick={nextMonthHandler}>&gt;</div>
-      <div className="calendar-header-btn">{CalendarLocale.today}</div>
+      <div className="calendar-header-btn" onClick={todayHandler}>{CalendarLocale.today}</div>
     </div>
   </div>
 }

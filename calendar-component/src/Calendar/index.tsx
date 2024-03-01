@@ -1,4 +1,4 @@
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import Header from "./Header";
 import MonthCalendar from "./MonthCalendar";
 import "./index.scss";
@@ -30,8 +30,9 @@ function Calendar(props: CalendarProps) {
   const [curValue, setCurValue] = useState<Dayjs>(value);
   const [curMonth, setCurMonth] = useState<Dayjs>(value);
 
-  function selectHandler(date: Dayjs) {
+  function changeDate(date: Dayjs) {
     setCurValue(date);
+    setCurMonth(date);
     onChange?.(date);
   }
 
@@ -46,12 +47,16 @@ function Calendar(props: CalendarProps) {
         nextMonthHandler={() => {
           setCurMonth(curMonth.add(1, 'month'));
         }}
+        todayHandler={() => {
+          const today = dayjs(Date.now());
+          changeDate(today);
+        }}
       />
       <MonthCalendar
         {...props}
         value={curValue}
         curMonth={curMonth}
-        selectHandler={selectHandler}
+        selectHandler={changeDate}
       />
     </div>
   </LocaleContext.Provider>
