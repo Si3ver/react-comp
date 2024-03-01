@@ -17,4 +17,20 @@
       flex: 1;
     }
   }
+
+  &-body {
+    &-row {
+      height: 100px;
+      display: flex;
+    }
+    &-cell {
+      flex: 1;
+      border: 1px solid #eee;  
+      padding: 10px;
+      color: #ccc;
+      &-current {
+        color: #000;
+      }
+    }
+  }
 }

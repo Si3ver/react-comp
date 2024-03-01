@@ -1,9 +1,14 @@
+import { Dayjs } from "dayjs";
 import MonthCalendar from "./MonthCalendar";
 import "./index.scss";
 
-function Calendar() {
+export interface CalendarProps {
+  value: Dayjs,
+}
+
+function Calendar(props: CalendarProps) {
   return <div className="calendar">
-    <MonthCalendar />
+    <MonthCalendar {...props} />
   </div>
 }
 
