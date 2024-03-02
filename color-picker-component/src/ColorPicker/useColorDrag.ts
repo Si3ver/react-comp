@@ -38,7 +38,37 @@ function useColorDrag(
   }, []);
 
   const updateOffset: EventHandle = e => {
-    
+    const scrollXOffset = document.documentElement.scrollLeft || document.body.scrollLeft;
+    const scrollYOffset = document.documentElement.scrollTop || document.body.scrollTop;
+
+    const pageX = e.pageX - scrollXOffset;
+    const pageY = e.pageY - scrollYOffset;
+
+    const {
+      x: rectX,
+      y: rectY,
+      width,
+      height,
+    } = containerRef.current!.getBoundingClientRect();
+
+    const {
+      width: targetWidth,
+      height: targetHeight,
+    } = targetRef.current!.getBoundingClientRect();
+
+    const centerOffsetX = targetWidth / 2;
+    const centerOffsetY = targetHeight / 2;
+
+    const offsetX = Math.max(0, Math.min(pageX - rectX, width)) - centerOffsetX;
+    const offsetY = Math.max(0, Math.min(pageY - rectY, height)) - centerOffsetY;
+
+    const calcOffset = {
+      x: offsetX,
+      y: direction === 'x' ? offsetValue.y : offsetY,
+    };
+
+    setOffsetValue(calcOffset);
+    onDragChange?.(calcOffset);
   };
 
   const onDragStop: EventHandle = e => {
