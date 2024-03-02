@@ -31,6 +31,10 @@ function ColorPickerPanel(props: ColorPickerProps) {
 
   return <div className={classNames} style={style}>
     <Palette color={colorValue} onChange={onPaletteColorChange}></Palette>
+    <div style={{width: 20, height: 20, background: colorValue.toRgbString()}}></div>
+    <p>HEX: {colorValue.toHexString()}</p>
+    <p>RGB: {colorValue.toRgbString()}</p>
+    <p>HSL: {colorValue.toHslString()}</p>
   </div>;
 }
 
