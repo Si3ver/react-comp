@@ -1,10 +1,12 @@
 import React from "react";
 import { Color } from "./color";
+import Handler from "./Handler";
 
 const Palette: React.FC<{
   color: Color
 }> = ({color}) => {
   return <div className="color-picker-panel-palette">
+    <Handler color={color.toRgbString()} />
     <div className="color-picker-panel-palette-main"
       style={{
         backgroundColor: `hsl(${color.toHsl().h},100%, 50%)`,
