@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import { useEffect, useRef, useState } from 'react';
+import { useDrag, useDragLayer, useDrop } from 'react-dnd';
 import './App.css';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 
 interface ItemType {
   color: string;
@@ -13,7 +14,7 @@ interface BoxProps {
 function Box(props: BoxProps) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const [{ dragging }, drag]= useDrag({
+  const [{ dragging }, drag, dragPreview]= useDrag({
     type: 'box',
     item: {
       color: props.color,
@@ -25,12 +26,34 @@ function Box(props: BoxProps) {
     },
   });
 
-  drag(ref);
+  useEffect(() => {
+    drag(ref);
+    dragPreview(getEmptyImage());
+  }, []);
 
   return <div ref={ref} className={ dragging ? 'box dragging' : 'box' } style={
     { background: props.color || 'blue' }
   }></div>
 }
+
+const DragLayer = () => {
+  const { isDragging, item, currentOffset} = useDragLayer((monitor) => ({
+      item: monitor.getItem(),
+      isDragging: monitor.isDragging(),
+      currentOffset: monitor.getSourceClientOffset(),
+    }));
+
+    if (!isDragging) {
+      return null;
+    }
+    return (
+      <div className='drag-layer' style={{
+        left: currentOffset?.x,
+        top: currentOffset?.y
+      }}>{item.color} 拖拖拖</div>
+    );
+}
+
 
 function Container() {
   
@@ -46,7 +69,10 @@ function Container() {
       },
     }
   });
-  drop(ref);
+
+  useEffect(() => {
+    drop(ref);
+  }, []);
 
   return <div ref={ref} className="container">
     {
@@ -63,6 +89,7 @@ function App() {
     <Box color="blue"></Box>
     <Box color="red"></Box>
     <Box color="green"></Box>
+    <DragLayer />
   </div>
 }
 
