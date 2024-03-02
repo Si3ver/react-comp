@@ -13,16 +13,21 @@ interface BoxProps {
 function Box(props: BoxProps) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const [, drag]= useDrag({
+  const [{ dragging }, drag]= useDrag({
     type: 'box',
     item: {
       color: props.color,
-    }
+    },
+    collect(monitor) {
+      return {
+        dragging: monitor.isDragging(),
+      }
+    },
   });
 
   drag(ref);
 
-  return <div ref={ref} className='box' style={
+  return <div ref={ref} className={ dragging ? 'box dragging' : 'box' } style={
     { background: props.color || 'blue' }
   }></div>
 }
@@ -33,12 +38,12 @@ function Container() {
 
   const ref = useRef(null);
 
-  const [,drop] = useDrop(() => {
+  const [, drop] = useDrop(() => {
     return {
       accept: 'box',
       drop(item: ItemType) {
         setBoxes((boxes) => [...boxes, item]);
-      }
+      },
     }
   });
   drop(ref);
