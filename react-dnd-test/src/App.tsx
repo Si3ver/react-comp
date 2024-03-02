@@ -1,42 +1,63 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import './App.css';
 
-function Box() {
-  const ref = useRef(null);
+interface ItemType {
+  color: string;
+}
+
+interface BoxProps {
+  color: string;
+}
+
+function Box(props: BoxProps) {
+  const ref = useRef<HTMLDivElement>(null);
 
   const [, drag]= useDrag({
     type: 'box',
     item: {
-      color: 'blue'
+      color: props.color,
     }
   });
 
   drag(ref);
 
-  return <div ref={ref} className='box'></div>
+  return <div ref={ref} className='box' style={
+    { background: props.color || 'blue' }
+  }></div>
 }
 
 function Container() {
+  
+  const [boxes, setBoxes] = useState<ItemType[]>([]);
+
   const ref = useRef(null);
 
   const [,drop] = useDrop(() => {
     return {
       accept: 'box',
-      drop(item) {
-        console.log(item);
+      drop(item: ItemType) {
+        setBoxes((boxes) => [...boxes, item]);
       }
     }
   });
   drop(ref);
 
-  return <div ref={ref} className="container"></div>
+  return <div ref={ref} className="container">
+    {
+      boxes.map(item => {
+        return <Box color={item.color}></Box>
+      })
+    }
+  </div>
 }
 
 function App() {
   return <div>
     <Container></Container>
-    <Box></Box>
+    <Box color="blue"></Box>
+    <Box color="red"></Box>
+    <Box color="green"></Box>
   </div>
 }
 
