@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
+import { ConfigProvider, Space } from 'antd';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default function App() {
+  return <div>
+    <ConfigProvider space={{ size: 4 }}>
+      <Space direction='horizontal' size="large" style={{background: 'green'}} align='end' wrap={true}>
+        <div className="box"></div>
+        <div className="box"></div>
+        <div className="box"></div>
+        <div className="box"></div>
+        <div className="box"></div>
+      </Space>
 
-export default App;
+      <Space split={<div className="box" style={{background: 'yellow'}}></div>}>
+        <div className="box"></div>
+        <div className="box"></div>
+        <div className="box"></div>
+        <div className="box"></div>
+        <div className="box"></div>
+      </Space>
+
+      <Space direction='vertical' size="small">
+        <div className="box"></div>
+        <div className="box"></div>
+        <div className="box"></div>
+      </Space>
+    </ConfigProvider>
+  </div>
+}
