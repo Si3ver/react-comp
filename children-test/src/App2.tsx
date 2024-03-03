@@ -1,21 +1,13 @@
-import React, { FC } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 
-interface RowProps{
-  children?: React.ReactNode
-}
-
-const Row: FC<RowProps> = (props) => {
+const Row: FC<PropsWithChildren> = (props) => {
   const { children } = props;
-  return <div className='row111'>
+  return <div className='row'>
     {children}
   </div>
 }
 
-interface RowListProps{
-  children?: React.ReactNode
-}
-
-const RowList: FC<RowListProps> = (props) => {
+const RowList: FC<PropsWithChildren> = (props) => {
   const { children } = props;
 
   return <div className='row-list'>
