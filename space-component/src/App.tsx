@@ -1,4 +1,5 @@
-import { ConfigProvider, Space } from 'antd';
+import { ConfigProvider } from 'antd';
+import { Space } from './Space';
 import './App.css';
 
 export default function App() {
