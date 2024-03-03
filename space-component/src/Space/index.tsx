@@ -14,6 +14,16 @@ export interface SpaceProps extends React.HTMLAttributes<HTMLDivElement> {
   wrap?: boolean;
 }
 
+const spaceSize = {
+  small: 8,
+  middle: 16,
+  large: 24,
+};
+
+function getNumberSize(size: SizeType) {
+  return typeof size === 'string' ? spaceSize[size] : size || 0;
+}
+
 const Space: React.FC<SpaceProps> = props => {
   const {
     className,
@@ -22,6 +32,7 @@ const Space: React.FC<SpaceProps> = props => {
     direction = 'horizontal',
     align,
     split,
+    wrap,
     ...otherProps
   } = props;
 
@@ -43,9 +54,29 @@ const Space: React.FC<SpaceProps> = props => {
     </div>
   });
 
+  const otherStyles: React.CSSProperties = {};
+  const [horizontalSize, verticalSize] = React.useMemo(
+    () => {
+      return ((Array.isArray(size) ? size : [size, size]) as [SizeType, SizeType]).map(item =>
+        getNumberSize(item),
+      )
+    },
+    [size]
+  );
+
+  otherStyles.columnGap = horizontalSize;
+  otherStyles.rowGap = verticalSize;
+
+  if (wrap) {
+    otherStyles.flexWrap = 'wrap';
+  }
+
   return <div
     className={cn}
-    style={style}
+    style={{
+      ...otherStyles,
+      ...style,
+    }}
     {...otherProps}
   >
     {nodes}
