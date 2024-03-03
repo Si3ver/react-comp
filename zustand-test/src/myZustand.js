@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 function createStore(createState) {
   let state;
@@ -39,18 +39,10 @@ function createStore(createState) {
 }
 
 function useStore(api, selector) {
-  const [,forceRender ] = useState(0);
-  useEffect(() => {
-      api.subscribe((state, prevState) => {
-          const newObj = selector(state);
-          const oldobj = selector(prevState);
-
-          if(newObj !== oldobj) {
-              forceRender(Math.random());
-          }       
-      })
-  }, []);
-  return selector(api.getState());
+  function getState() {
+    return selector(api.getState());
+  }
+  return useSyncExternalStore(api.subscribe, getState);
 }
 
 const create = (createState) => {
