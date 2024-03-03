@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { create } from "zustand";
+import { create } from "./myZustand";
 import { persist } from "zustand/middleware";
 
 // 自定义 zustand 中间件
@@ -35,6 +35,10 @@ export default function App() {
   return (
     <div>
       <input onChange={(e) => updateAaa(e.currentTarget.value)} value={aaa} />
+      {/* <button onClick={() => useXxxStore.setState((state)  => {
+        console.log(state);
+        return {}
+      } )}>setState</button> */}
       <Bbb></Bbb>
     </div>
   );
