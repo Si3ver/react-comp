@@ -1,28 +1,30 @@
-function createElement(type, props, ...children) {
-  return {
-    type,
-    props: {
-      ...props,
-      children: children.map((child) => {
-        const isTextNode = typeof child === 'string' || typeof child === 'number';
-        return isTextNode ? createTextNode(child) : child;
-      }) 
-    }
+(function() {
+  function createElement(type, props, ...children) {
+    return {
+      type,
+      props: {
+        ...props,
+        children: children.map((child) => {
+          const isTextNode = typeof child === 'string' || typeof child === 'number';
+          return isTextNode ? createTextNode(child) : child;
+        }) 
+      }
+    };
   }
-}
 
-function createTextNode(nodeValue) {
-  return {
-    type: 'TEXT_ELEMENT',
-    props: {
-      nodeValue,
-      children: [],
-    },
+  function createTextNode(nodeValue) {
+    return {
+      type: 'TEXT_ELEMENT',
+      props: {
+        nodeValue,
+        children: [],
+      },
+    };
+  }
+
+  const MiniReact = {
+    createElement,
   };
-}
 
-const MiniReact = {
-  createElement,
-};
-
-window.MiniReact = MiniReact;
+  window.MiniReact = MiniReact;
+})();
