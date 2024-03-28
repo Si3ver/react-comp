@@ -1,6 +1,15 @@
-const content = <div>
-  {/* <William>william</William> */}
-  <a href="xxx">link</a>
-</div>
+const { render, useState, useEffect } = window.MiniReact;
 
-console.log(JSON.stringify(content, null, 2));
+function App() {
+  
+  return (
+    <div>
+      <h1>h1</h1>
+      <p>
+        <h2>h2</h2>
+      </p>
+    </div>
+  );
+}
+
+render(<App />, document.getElementById('root'));
