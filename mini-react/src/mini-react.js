@@ -181,6 +181,7 @@
           props: element.props,
           dom: oldFiber.dom,
           return: wipFiber,
+          alternate: oldFiber, // !! alternate
           effectTag: 'UPDATE',
         }
       }
@@ -189,7 +190,7 @@
       if (element && !sameType) {
         newFiber = {
           type: element.type,
-          props: element.prop,
+          props: element.props, // !! props
           dom: null,
           return: wipFiber,
           alternate: null,
@@ -264,7 +265,7 @@
 
   // 当我们将整棵树遍历成Fiber后，就可以进入commit阶段
   function commitRoot() {
-    debugger;
+    // debugger;
     deletions.forEach(commitWork);
     // div#root本事已经存在，所以从child开始
     commitWork(wipRoot.child);
