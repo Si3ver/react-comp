@@ -1,4 +1,5 @@
 (function() {
+  // ------------------------ jsxFactory: createElement ------------------------
   function createElement(type, props, ...children) {
     return {
       type,
@@ -21,6 +22,8 @@
       },
     };
   }
+
+  // ------------------------ 1️⃣ render（reconcile） 阶段 ------------------------
 
   let nextUnitOfWork = null; // 下一个要处理的 fiber 节点
   let wipRoot = null; // 处理中(work in progress)的 fiber 链表的根节点
@@ -220,6 +223,7 @@
     }
   }
 
+  // ------------------------ hook useState ------------------------
   function useState(initialState) {
     const currentFiber = wipFiber;
 
@@ -254,6 +258,7 @@
     return [stateHook.state, setState];
   }
 
+  // ------------------------ hook useEffect ------------------------
   function useEffect(callback, deps) {
     const effectHook = {
       callback,
@@ -263,6 +268,7 @@
     wipFiber.effectHooks.push(effectHook);
   }
 
+  // ------------------------ 2️⃣ commit 阶段 ------------------------
   // 当我们将整棵树遍历成Fiber后，就可以进入commit阶段
   function commitRoot() {
     // debugger;
