@@ -223,7 +223,67 @@
     }
   }
 
-  // ------------------------ hook useState ------------------------
+  // ------------------------ 2️⃣ commit 阶段 ------------------------
+  // 当我们将整棵树遍历成Fiber后，就可以进入commit阶段
+  function commitRoot() {
+    // debugger;
+    deletions.forEach(commitWork);
+    // div#root本事已经存在，所以从child开始
+    commitWork(wipRoot.child);
+    commitEffectHooks();
+    currentRoot = wipRoot;
+    wipRoot = null;
+  }
+
+  function commitWork(fiber) {
+    if (!fiber) {
+      return;
+    }
+
+    // 拿到当前处理Fiber的父标签
+    let domParentFiber = fiber.return;
+    // 假如当前的fiber的父级是App组件，App Fiber并不代表真实的DOM。而应该是上一级的div#root，通过一个循环找到最近的父级
+    while (!domParentFiber.dom) {
+      domParentFiber = domParentFiber.return;
+    }
+    // 拿到父级DOM
+    const domParent = domParentFiber.dom;
+
+    // 处理 fiber 对应的 effect
+    if (fiber.effectTag === 'PLACEMENT' && fiber.dom != null) {
+      domParent.appendChild(fiber.dom); // 1️⃣ placement -> appendChild(fiber.dom)
+    } else if (fiber.effectTag === 'UPDATE' && fiber.dom != null) {
+      updateDom(fiber.dom, fiber.alternate.props, fiber.props); // 2️⃣ update -> 修改 dom & event listeners
+    } else if (fiber.effectTag === 'DELETION') {
+      commitDeletion(fiber, domParent); // 3️⃣ delete -> removeChild
+    }
+
+    commitWork(fiber.child);
+    commitWork(fiber.sibling);
+  }
+
+  function commitDeletion(fiber, domParent) {
+    if (fiber.dom) {
+      domParent.removeChild(fiber.dom);
+    } else {
+      commitDeletion(fiber.child, domParent);
+    }
+  }
+
+  function isDepsEqual(deps, newDeps) {
+    if (deps.length !== newDeps.length) {
+      return false;
+    }
+
+    for (let i = 0; i < deps.length; i++) {
+      if (deps[i] !== newDeps[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // ------------------------ [hook] useState ------------------------
   function useState(initialState) {
     const currentFiber = wipFiber;
 
@@ -258,7 +318,7 @@
     return [stateHook.state, setState];
   }
 
-  // ------------------------ hook useEffect ------------------------
+  // ------------------------ [hook] useEffect ------------------------
   function useEffect(callback, deps) {
     const effectHook = {
       callback,
@@ -266,68 +326,6 @@
       cleanup: undefined,
     };
     wipFiber.effectHooks.push(effectHook);
-  }
-
-  // ------------------------ 2️⃣ commit 阶段 ------------------------
-  // 当我们将整棵树遍历成Fiber后，就可以进入commit阶段
-  function commitRoot() {
-    // debugger;
-    deletions.forEach(commitWork);
-    // div#root本事已经存在，所以从child开始
-    commitWork(wipRoot.child);
-    commitEffectHooks();
-    currentRoot = wipRoot;
-    wipRoot = null;
-  }
-
-  function commitWork(fiber) {
-    if (!fiber) {
-      return;
-    }
-
-    // 拿到当前处理Fiber的父标签
-    let domParentFiber = fiber.return;
-    // 假如当前的fiber的父级是App组件，App Fiber并不代表真实的DOM。而应该是上一级的div#root，通过一个循环找到最近的父级
-    while (!domParentFiber.dom) {
-      domParentFiber = domParentFiber.return;
-    }
-    // 拿到父级DOM
-    const domParent = domParentFiber.dom;
-
-    // 如果当前Fiber是替换，则加入作为父级的子元素，利用appendChild方法
-    if (fiber.effectTag === 'PLACEMENT' && fiber.dom != null) {
-      domParent.appendChild(fiber.dom);
-    }
-    //
-    else if (fiber.effectTag === 'UPDATE' && fiber.dom != null) {
-      updateDom(fiber.dom, fiber.alternate.props, fiber.props);
-    } else if (fiber.effectTag === 'DELETION') {
-      commitDeletion(fiber, domParent);
-    }
-
-    commitWork(fiber.child);
-    commitWork(fiber.sibling);
-  }
-
-  function commitDeletion(fiber, domParent) {
-    if (fiber.dom) {
-      domParent.removeChild(fiber.dom);
-    } else {
-      commitDeletion(fiber.child, domParent);
-    }
-  }
-
-  function isDepsEqual(deps, newDeps) {
-    if (deps.length !== newDeps.length) {
-      return false;
-    }
-
-    for (let i = 0; i < deps.length; i++) {
-      if (deps[i] !== newDeps[i]) {
-        return false;
-      }
-    }
-    return true;
   }
 
   function commitEffectHooks() {
@@ -372,8 +370,8 @@
       run(fiber.sibling);
     }
 
-    runCleanup(wipRoot);
-    run(wipRoot);
+    runCleanup(wipRoot); // 先清理
+    run(wipRoot); // 再调用
   }
 
   const MiniReact = {
